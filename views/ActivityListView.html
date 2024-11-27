@@ -38,21 +38,18 @@
     <h3>Activities List</h3>
     <table style="margin:20 0 20 0" class="table table-striped">
       <thead style="background: #000; color: #fff">
-         <th>Code</th>
-         <th>Description</th>
-         <th>Billable</th>
-         <th>Bill Rate</th>
-         <th>Cost Rate</th> 
+         <th>First</th>
+         <th>Last</th>
+         <th>Date Hired</th>
+         <th>Total Hours</th>
          <th></th>                  
       </thead>
-      {% for activity in activityList %}
-        <tr style="cursor:pointer">
-          <td activityID = "{{ activity.id }}" onclick=loadActivity(this)>{{ activity.code }}</td>                
-          <td activityID = "{{ activity.id }}" onclick=loadActivity(this)>{{ activity.description }}</td>
-          <td activityID = "{{ activity.id }}" onclick=loadActivity(this)>{{ "true" if activity.billable == 1 else "false" }}</td>
-          <td activityID = "{{ activity.id }}" onclick=loadActivity(this)>{{ activity.billRate }}</td>
-          <td activityID = "{{ activity.id }}" onclick=loadActivity(this)>{{ activity.costRate }}</td>
-          <td activityID = "{{ activity.id }}" onclick=deleteActivity(this)>Delete</td>
+      {% for employee in employeeList %}
+      <tr style="cursor:pointer">
+        <td>{{ employee['firstName'] }}</td>
+        <td>{{ employee['lastName'] }}</td>
+        <td>{{ employee['dateHired'] }}</td>
+        <td>{{ employee['compTimeHours'] }}</td>
       </tr>
       {% endfor %}
     </table>

@@ -4,11 +4,11 @@ from shared.APIHelper import APIHelper
 from models.HttpHeaderModel import HttpHeaderModel
 from models.HttpResponseModel import HttpResponseModel
 from models.AuthResponseModel import AuthResponseModel
-from models.ActivityModel import ActivityModel
+from models.EmployeeModel import EmployeeModel
 from models.JWTModel import JWTModel
 from business.AuthManager import AuthManager
 from business.UserInfoManager import UserInfoManager
-from business.ActivityManager import ActivityManager
+from business.EmployeeManager import EmployeeManager
 from business.JWTManager import JWTManager
 import sys
 
@@ -44,12 +44,15 @@ def main():
         userInfoManager = UserInfoManager()
         userInfo = userInfoManager.GetUserInfo()
 
-        # Get Activity List
-        activityManager = ActivityManager()
-        activityList = activityManager.GetList()
-        return render_template('ActivityListView.html', userInfo = userInfo, activityList = activityList)
+        # Get Employeee List
+        employeeManager = EmployeeManager()
+        activeEmployeeList = employeeManager.GetList()
+
+        return render_template('ActivityListView.html', userInfo = userInfo, employeeList = activeEmployeeList)
     else :
         return render_template('index.html')
+    
+    
 
 @app.route('/connectToCore', methods=['POST'])
 def connectToCore():
@@ -69,52 +72,7 @@ def disconnectFromCore():
     except:
         return '<div style=\'color:red\'>' + str(sys.exc_info()[1]) + '</div>'
 
-@app.route('/CreateActivityView')
-def CreateActivityView():
-    try:
-        id = request.args.get('id')        
-        if id != None : #update
-            activityManager = ActivityManager()            
-            activity = activityManager.Get(id)
-            return render_template('CreateActivityView.html', activity = activity)
-        else : # create  
-            activity = ActivityModel('{"code":"","description":"","billable":"","costRate":"","billRate":""}')
-            return render_template('CreateActivityView.html', activity = activity)
-    except:
-        return '<div style=\'color:red\'>' + str(sys.exc_info()[1]) + '</div>'
 
-@app.route('/SubmitActivity', methods=['POST'])
-def SubmitActivity():
-    try:
-        activity = ActivityModel()
-        activityManager = ActivityManager()
-        activity.code = request.form['code']
-        activity.description = request.form['description']
-        activity.billRate = request.form['billRate']
-        activity.costRate = request.form['costRate']
-        activity.billable = 'isBillable' in request.form
-
-        id = request.form['id']
-        if id != 'None' : #update
-            activityManager.Update(id, activity)
-        else : #create
-            activityManager.Create(activity)
-        return redirect("/")
-    except:
-        return '<div style=\'color:red\'>' + str(sys.exc_info()[1]) + '</div>'
-
-@app.route('/DeleteActivity')
-def DeleteActivity():
-    try:
-        id = request.args.get('id')
-        if id != None : #update
-            activityManager = ActivityManager()
-            activityManager.Delete(id)
-        return redirect("/")
-    except:
-        return '<div style=\'color:red\'>' + str(sys.exc_info()[1]) + '</div>'
-    
-    
 
 if __name__ == "__main__":
     app.run()
